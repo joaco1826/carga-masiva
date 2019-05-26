@@ -10,6 +10,7 @@ require('./bootstrap');
 $(document).ready(function () {
     $('#frmExcel').on('submit', function(e){
         e.preventDefault();
+        swal("Por favor espere, estamos procesando el archivo");
         var form = $(this);
         var formdata = false;
         if (window.FormData){

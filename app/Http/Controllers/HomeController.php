@@ -74,6 +74,7 @@ class HomeController extends Controller
                         "brand_id" => $brand->id,
                         "description" => $v["caracteristicas"],
                         "featured" => $v["destacado"],
+                        "stock" => $v["stock"],
                         "status" => $v["estado"]
                     ]);
                 } else {
@@ -87,6 +88,7 @@ class HomeController extends Controller
                         "brand_id" => $brand->id,
                         "description" => $v["caracteristicas"],
                         "featured" => $v["destacado"],
+                        "stock" => $v["stock"],
                         "status" => $v["estado"]
                     ]);
                 }
@@ -117,5 +119,40 @@ class HomeController extends Controller
             ), 400)->header('Content-Type', 'text/json');
         }
 
+    }
+
+    public function export()
+    {
+        Excel::create('Productos', function($excel) {
+
+            $products = Product::all();
+
+            $excel->sheet('Productos', function($sheet) use($products) {
+
+                $sheet->row(1, [
+                    'NOMBRE', 'REFERENCIA', 'PRECIO', 'DESCUENTO', 'IMAGEN', 'CATEGORIA', 'MARCA', 'CARACTERISTICAS',
+                    'DESTACADO', 'STOCK', 'ESTADO', 'ETIQUETAS', 'TALLAS'
+                ]);
+
+                foreach($products as $index => $pro) {
+                    $labels = [];
+                    foreach ($pro->labels as $l) {
+                        $labels[] = $l->name;
+                    }
+                    $labels = implode("-", $labels);
+                    $sizes = [];
+                    foreach ($pro->sizes as $s) {
+                        $sizes[] = $s->name;
+                    }
+                    $sizes = implode("-", $sizes);
+                    $sheet->row($index+2, [
+                        $pro->name, $pro->reference, $pro->price, $pro->discount, $pro->image, $pro->category->name,
+                        $pro->brand->name, $pro->description, $pro->featured, $pro->stock, $pro->status, $labels, $sizes
+                    ]);
+                }
+
+            });
+
+        })->export('xlsx');
     }
 }

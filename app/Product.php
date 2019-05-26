@@ -16,6 +16,7 @@ class Product extends Model
         "brand_id",
         "description",
         "featured",
+        "stock",
         "status"
     ];
 
@@ -31,5 +32,15 @@ class Product extends Model
         return $this->belongsToMany(
             Size::class, "products_sizes", "products_id", "sizes_id"
         );
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
     }
 }
