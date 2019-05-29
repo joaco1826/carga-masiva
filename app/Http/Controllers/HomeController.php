@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Brand;
 use App\Category;
+use App\Image;
 use App\Label;
 use App\Product;
 use App\Size;
@@ -107,6 +108,19 @@ class HomeController extends Controller
                     $label_array[] = $label->id;
                 }
                 $product->labels()->sync($label_array);
+
+                $images = explode(',', $v["imagenes"]);
+                foreach ($images as $img) {
+                    if ($img != "") {
+                        $image = Image::where("image", $img)->first();
+                        if (!$image) {
+                            Image::create([
+                                "product_id" => $product->id,
+                                "image" => $img
+                            ]);
+                        }
+                    }
+                }
             }
 
             return response(json_encode(
@@ -131,7 +145,7 @@ class HomeController extends Controller
 
                 $sheet->row(1, [
                     'NOMBRE', 'REFERENCIA', 'PRECIO', 'DESCUENTO', 'IMAGEN', 'CATEGORIA', 'MARCA', 'CARACTERISTICAS',
-                    'DESTACADO', 'STOCK', 'ESTADO', 'ETIQUETAS', 'TALLAS'
+                    'DESTACADO', 'STOCK', 'ESTADO', 'ETIQUETAS', 'TALLAS', 'IMAGENES'
                 ]);
 
                 foreach($products as $index => $pro) {
@@ -145,9 +159,15 @@ class HomeController extends Controller
                         $sizes[] = $s->name;
                     }
                     $sizes = implode("-", $sizes);
+                    $images = [];
+                    foreach ($pro->images as $i) {
+                        $images[] = $i->image;
+                    }
+                    $images = implode(",", $images);
                     $sheet->row($index+2, [
                         $pro->name, $pro->reference, $pro->price, $pro->discount, $pro->image, $pro->category->name,
-                        $pro->brand->name, $pro->description, $pro->featured, $pro->stock, $pro->status, $labels, $sizes
+                        $pro->brand->name, $pro->description, $pro->featured, $pro->stock, $pro->status, $labels, $sizes,
+                        $images
                     ]);
                 }
 
