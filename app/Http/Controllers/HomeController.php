@@ -70,6 +70,7 @@ class HomeController extends Controller
                         "name" => $v["nombre"],
                         "price" => $v["precio"],
                         "discount" => $v["descuento"],
+                        "discount2" => $v["descuento_adicional"],
                         "image" => $v["imagen"],
                         "category_id" => $category->id,
                         "brand_id" => $brand->id,
@@ -84,6 +85,7 @@ class HomeController extends Controller
                         "reference" => $v["referencia"],
                         "price" => $v["precio"],
                         "discount" => $v["descuento"],
+                        "discount2" => $v["descuento_adicional"],
                         "image" => $v["imagen"],
                         "category_id" => $category->id,
                         "brand_id" => $brand->id,
@@ -144,7 +146,7 @@ class HomeController extends Controller
             $excel->sheet('Productos', function($sheet) use($products) {
 
                 $sheet->row(1, [
-                    'NOMBRE', 'REFERENCIA', 'PRECIO', 'DESCUENTO', 'IMAGEN', 'CATEGORIA', 'MARCA', 'CARACTERISTICAS',
+                    'NOMBRE', 'REFERENCIA', 'PRECIO', 'DESCUENTO', 'DESCUENTO_ADICIONAL', 'IMAGEN', 'CATEGORIA', 'MARCA', 'CARACTERISTICAS',
                     'DESTACADO', 'STOCK', 'ESTADO', 'ETIQUETAS', 'TALLAS', 'IMAGENES'
                 ]);
 
@@ -165,7 +167,7 @@ class HomeController extends Controller
                     }
                     $images = implode(",", $images);
                     $sheet->row($index+2, [
-                        $pro->name, $pro->reference, $pro->price, $pro->discount, $pro->image, $pro->category->name,
+                        $pro->name, $pro->reference, $pro->price, $pro->discount, $pro->discount2, $pro->image, $pro->category->name,
                         $pro->brand->name, $pro->description, $pro->featured, $pro->stock, $pro->status, $labels, $sizes,
                         $images
                     ]);
