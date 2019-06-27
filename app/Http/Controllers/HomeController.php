@@ -95,7 +95,7 @@ class HomeController extends Controller
                         "status" => $v["estado"]
                     ]);
                 }
-                $sizes = explode('-', $v["tallas"]);
+                $sizes = explode('/', $v["tallas"]);
                 $size_data = Size::whereIn("name", $sizes)->get();
                 $size_array = [];
                 foreach ($size_data as $size) {
@@ -160,7 +160,7 @@ class HomeController extends Controller
                     foreach ($pro->sizes as $s) {
                         $sizes[] = $s->name;
                     }
-                    $sizes = implode("-", $sizes);
+                    $sizes = implode("/", $sizes);
                     $images = [];
                     foreach ($pro->images as $i) {
                         $images[] = $i->image;
