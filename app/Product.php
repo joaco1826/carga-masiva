@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    protected $table = 'producto';
+
     protected $fillable = [
         "name",
         "reference",
@@ -36,12 +38,17 @@ class Product extends Model
 
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, "categorias_id");
     }
 
-    public function brand()
+    public function subcategoria()
     {
-        return $this->belongsTo(Brand::class);
+        return $this->belongsTo(SubCategoria::class, "subcategorias_id");
+    }
+
+    public function sub_subcategoria()
+    {
+        return $this->belongsTo(SubSubCategoria::class, "sub_subcategorias_id");
     }
 
     public function images()
